@@ -29,15 +29,15 @@ spec:
             disk:
               bus: virtio
           interfaces:
-            - bridge: {}
-              name: default-net
-            - bridge: {}
-              name: marcel-vn
+            - name: default
+              masquerade: {}
+            - name: marcel-vn
+              bridge: {}
           rng: {}
         features:
           acpi: {}
       networks:
-      - name: default-net
+      - name: default
         pod: {} # Uses default Volterra CNI as for vk8s pods
       - name: marcel-vn
         multus: # Secondary multus network

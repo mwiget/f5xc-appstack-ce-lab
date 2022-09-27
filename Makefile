@@ -12,5 +12,5 @@ push:
 apply:
 	envsubst < mwce1.yaml | kubectl apply -f -
 
-destroy:
+delete:
 	kubectl delete -f mwce1.yaml
