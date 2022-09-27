@@ -8,3 +8,9 @@ centos-7.2009.5-202103011045.qcow2:
 push:
 	docker tag vsb-ves-ce marcelwiget/vsb-ves-ce
 	docker push marcelwiget/vsb-ves-ce
+
+apply:
+	envsubst < mwce1.yaml | kubectl apply -f -
+
+destroy:
+	kubectl delete -f mwce1.yaml
