@@ -1,0 +1,97 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: mwce1
+  creationTimestamp: null
+spec:
+  runStrategy: Always
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        image: mwce1
+    spec:
+      #      nodeSelector:
+      #    kubernetes.io/hostname: ryzen1
+      domain:
+        cpu:
+          model: host-passthrough
+        resources:
+          limits:
+            cpu: 4
+            memory: 16Gi
+        devices:
+          disks:
+          - name: containerdisk
+            disk:
+              bus: virtio
+          - name: cloudinit
+            disk:
+              bus: virtio
+          interfaces:
+            - bridge: {}
+              name: default-net
+            - bridge: {}
+              name: marcel-vn
+          rng: {}
+        features:
+          acpi: {}
+          smm:
+            enabled: true
+      networks:
+      - name: default-net
+        pod: {} # Uses default Volterra CNI as for vk8s pods
+      - name: marcel-vn
+        multus: # Secondary multus network
+          networkName: ves-system/marcel-vn-internet
+      volumes:
+        - name: containerdisk
+          containerDisk:
+            image: marcelwiget/vsb-ves-ce
+            #            imagePullPolicy: Always
+        - name: cloudinit
+          cloudInitNoCloud:
+            userData: |
+              #cloud-config
+              users:
+                - name: "vesop"
+                  passwd: ""
+                  groups:
+                    - "sudo"
+              coreos:
+                update:
+                  reboot-strategy: "off"
+              write_files:
+              - path: /etc/vpm/config.yaml
+                permissions: 0644
+                owner: root
+                content: |
+                  Kubernetes:
+                    EtcdUseTLS: true
+                    Server: vip
+                  Vpm:
+                    ClusterName: mwce1
+                    ClusterType: ce
+                    Config: /etc/vpm/config.yaml
+                    Hostname: master-0
+                    Latitude: 47.166
+                    Longitude: 8.515
+                    MauriceEndpoint: "https://register.staging.volterra.us"
+                    MauricePrivateEndpoint: "https://register-tls.staging.volterra.us"
+                    Proxy: {}
+                    Token: "<registration-token>"
+              - path: /etc/vpm/certified-hardware.yaml
+                permissions: 0644
+                owner: root
+                content: |
+                  active: kvm-regular-nic-voltmesh
+                  certifiedHardware:
+                    kvm-regular-nic-voltmesh:
+                      Vpm:
+                        PrivateNIC: eth0
+                      outsideNic:
+                      - eth0
+                  primaryOutsideNic: eth0
+              runcmd:
+                - [ sh, -c, test -e /usr/bin/fsextend  && /usr/bin/fsextend || true ]
+              hostname: mwce1
