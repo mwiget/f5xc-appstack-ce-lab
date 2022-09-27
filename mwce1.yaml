@@ -33,9 +33,6 @@ spec:
               masquerade: {}
             - name: marcel-vn
               bridge: {}
-          rng: {}
-        features:
-          acpi: {}
       networks:
       - name: default
         pod: {} # Uses default Volterra CNI as for vk8s pods
@@ -59,6 +56,8 @@ spec:
               coreos:
                 update:
                   reboot-strategy: "off"
+              network:
+                version: 2
               write_files:
               - path: /etc/vpm/config.yaml
                 permissions: 0644
@@ -78,6 +77,12 @@ spec:
                     MauricePrivateEndpoint: "https://register-tls.staging.volterra.us"
                     Proxy: {}
                     Token: "$TOKEN"
+              - path: /etc/systemd/resolved.conf
+                permissions: 0644
+                owner: root
+                content: |
+                  [Resolve]
+                  DNS=1.1.1.1
               - path: /etc/vpm/certified-hardware.yaml
                 permissions: 0644
                 owner: root
