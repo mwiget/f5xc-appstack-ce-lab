@@ -11,6 +11,10 @@ push:
 
 apply:
 	envsubst < mwce1.yaml | kubectl apply -f -
+	envsubst < mwce2.yaml | kubectl apply -f -
+	envsubst < mwce3.yaml | kubectl apply -f -
 
 delete:
 	kubectl delete -f mwce1.yaml
+	kubectl delete -f mwce2.yaml
+	kubectl delete -f mwce3.yaml

@@ -1,7 +1,7 @@
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: mwce1
+  name: mwce3
   creationTimestamp: null
 spec:
   runStrategy: Always
@@ -9,7 +9,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        image: mwce1
+        image: mwce3
     spec:
       #      nodeSelector:
       #    kubernetes.io/hostname: ryzen1
@@ -38,7 +38,7 @@ spec:
         pod: {} # Uses default Volterra CNI as for vk8s pods
       - name: marcel-vn
         multus: # Secondary multus network
-          networkName: ves-system/marcel-vn-internet
+          networkName: ves-system/marcel-vn-ce3
       volumes:
         - name: containerdisk
           containerDisk:
@@ -67,12 +67,12 @@ spec:
                     EtcdUseTLS: true
                     Server: vip
                   Vpm:
-                    ClusterName: mw-ce1
+                    ClusterName: mw-ce3
                     ClusterType: ce
                     Config: /etc/vpm/config.yaml
-                    Hostname: mwce1
+                    Hostname: mwce3
                     Labels:
-                      ves.io/fleet: mwce1
+                      ves.io/fleet: mwce3
                       colo: marcel
                     Latitude: 47.166
                     Longitude: 8.515
@@ -100,4 +100,4 @@ spec:
                   primaryOutsideNic: eth0
               runcmd:
                 - [ sh, -c, test -e /usr/bin/fsextend  && /usr/bin/fsextend || true ]
-              hostname: mwce1
+              hostname: mwce3

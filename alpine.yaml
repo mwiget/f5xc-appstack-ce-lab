@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine1
+  annotations:
+    k8s.v1.cni.cncf.io/networks: ves-system/marcel-vn-internet
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: ryzen1
+  containers:
+  - image: alpine
+    command: ["sleep", "infinity"]
+    imagePullPolicy: IfNotPresent
+    name: alpine
+    securityContext:
+      privileged: true
+      runAsUser: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine2
+  annotations:
+    k8s.v1.cni.cncf.io/networks: ves-system/marcel-vn-ce2
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: ryzen1
+  containers:
+  - image: alpine
+    command: ["sleep", "infinity"]
+    imagePullPolicy: IfNotPresent
+    name: alpine
+    securityContext:
+      privileged: true
+      runAsUser: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine3
+  annotations:
+    k8s.v1.cni.cncf.io/networks: ves-system/marcel-vn-ce3
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: ryzen2
+  containers:
+  - image: alpine
+    command: ["sleep", "infinity"]
+    imagePullPolicy: IfNotPresent
+    name: alpine
+    securityContext:
+      privileged: true
+      runAsUser: 0
